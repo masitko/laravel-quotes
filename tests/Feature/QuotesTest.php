@@ -8,12 +8,17 @@ use Tests\TestCase;
 
 class QuotesTest extends TestCase
 {
-  /**
-   * A basic feature test example.
-   */
   public function test_request_without_token_returns_401(): void
   {
     $response = $this->get(route("quotes.index"));
+    $response->assertStatus(401);
+  }
+
+  public function test_request_with_wrong_token_returns_401(): void
+  {
+    $response = $this->withHeaders([
+      'Authorization' => 'wrong_token'
+    ])->get(route("quotes.index"));    
     $response->assertStatus(401);
   }
 
