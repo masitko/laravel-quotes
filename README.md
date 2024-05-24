@@ -6,7 +6,7 @@ This project comes with a local Docker environment utilisig [Laravel Sail](https
 
 ### 1. Clone the repository
 
-### 2. Run "composer install" inside the cloned repository folder or use the command below to run in inside the docker container:
+### 2. Run "composer install" inside the cloned repository folder or use the command below to run the command inside the docker container:
 ```
 
 docker run --rm --interactive --tty -v $(pwd):/app composer install
@@ -30,7 +30,7 @@ this will expose the API access on localhost on port 16080, and Redis on port 16
 
 **/api/v1/quotes**
 
-(only GET method available) - this will populate 5 quotes from the quote manager using a default 'kayne-west' quote driver (they are going to be populated from exteranl API on the first request and then cached in Redis)
+(only GET method available) - this will populate 5 quotes from the quote manager using a default 'kayne-west' quote driver (they are going to be populated from external API on the first request and then cached in Redis)
 
 **/api/v1/quotes/refresh**
 
