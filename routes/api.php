@@ -17,7 +17,7 @@ Route::group(
     'middleware' => [CheckAuthenticationToken::class]
   ],
   function () {
-    Route::get('/quotes', [QuotesController::class, 'index']);
-    Route::put('/quotes/refresh', [QuotesController::class, 'refresh']);
+    Route::get('/quotes', [QuotesController::class, 'index'])->name('quotes.index');
+    Route::put('/quotes/refresh', [QuotesController::class, 'refresh'])->name('quotes.refresh');
   }
 );
