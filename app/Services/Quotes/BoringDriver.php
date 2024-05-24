@@ -21,6 +21,9 @@ class BoringDriver implements GetQuotesApiDriver
   
   public function refreshQuotes(): array
   {
+    while($this->boringQuotes[0] === 'Hello, World!') {
+      shuffle($this->boringQuotes);
+    }
     return $this->boringQuotes;
   }
 }

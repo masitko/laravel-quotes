@@ -19,7 +19,7 @@ class KayneWestDriver implements GetQuotesApiDriver
   {
     $quotes = Cache::get('quotes:kayne-west');
     if ($quotes === null) {
-      $quotes = $this->getReomteQuotes();
+      $quotes = $this->getRemoteQuotes();
     }
     return $quotes;
   }
@@ -33,7 +33,7 @@ class KayneWestDriver implements GetQuotesApiDriver
   public function refreshQuotes(): array
   {
     Cache::forget('quotes:kayne-west');
-    return $this->getReomteQuotes();
+    return $this->getRemoteQuotes();
   }
 
   /**
@@ -42,7 +42,7 @@ class KayneWestDriver implements GetQuotesApiDriver
    * @param none
    * @return array
    */
-  private function getReomteQuotes(): array
+  protected function getRemoteQuotes(): array
   {
     $quotes = [];
     $quotesCount = Config::get('quotes.amount');
