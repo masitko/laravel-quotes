@@ -22,6 +22,21 @@ class KayneWestDriverTest extends TestCase
     $this->assertEquals($testQuotes, $result);
   }
 
+  public function test_get_quotes_should_call_get_remote_quotes_if_cache_is_empty(): void
+  {
+    $testQuotes = ['some_mocked_quotes'];
+
+    Cache::shouldReceive('get')
+      ->once()
+      ->with('quotes:kayne-west')
+      ->andReturn(null);
+
+    $mock = $this->getMockBuilder(KayneWestDriver::class)->onlyMethods(['getRemoteQuotes'])->getMock();
+    $mock->expects($this->once())->method('getRemoteQuotes')->willReturn($testQuotes);
+    $result = $mock->getQuotes();
+    $this->assertEquals($testQuotes, $result);
+  }
+
 
   public function test_refresh_quotes_should_clear_quotes_from_cache_and_call_get_remote_quotes_method(): void
   {
@@ -30,9 +45,9 @@ class KayneWestDriverTest extends TestCase
     Cache::shouldReceive('forget')
       ->once()
       ->with('quotes:kayne-west')
-      ->andReturn(null);
+      ->andReturn(true);
 
-    $mock = $this->getMockBuilder(KayneWestDriver::class)->onlyMethods([ 'getRemoteQuotes'])->getMock();
+    $mock = $this->getMockBuilder(KayneWestDriver::class)->onlyMethods(['getRemoteQuotes'])->getMock();
     $mock->expects($this->once())->method('getRemoteQuotes')->willReturn($testQuotes);
     $result = $mock->refreshQuotes();
     $this->assertEquals($testQuotes, $result);

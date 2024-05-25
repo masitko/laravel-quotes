@@ -24,7 +24,7 @@ class KayneWestDriver implements GetQuotesApiDriver
     return $quotes;
   }
 
-  /*
+  /** 
     * Refresh the quotes from the remote API.
     * 
     * @param none
