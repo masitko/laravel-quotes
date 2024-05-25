@@ -2,17 +2,17 @@
 
 This project comes with a local Docker environment utilisig [Laravel Sail](https://laravel.com/docs/11.x/sail#rebuilding-sail-images)
 
-## How to use it
+### How to use it
 
-### 1. Clone the repository
+1. Clone the repository
 
-### 2. Run "composer install" inside the cloned repository folder or use the command below to run the command inside the docker container:
+2. Run "composer install" inside the cloned repository folder or use the command below to run the command inside the docker container:
 ```
 
 docker run --rm --interactive --tty -v $(pwd):/app composer install
 
 ```
-### 3. Check the .env file - you can change the exposed ports at the bottom of the file using:
+3. Check the .env file - you can change the exposed ports at the bottom of the file using:
 ```
 
 PORT_PREFIX=16
@@ -20,13 +20,13 @@ PORT_PREFIX=16
 ```
 this will expose the API access on localhost on port 16080, and Redis on port 16379
 
-### 4. Start docker compose by using sail command:
+4. Start docker compose by using sail command:
 ```
 
 ./vendor/bin/sail up -d
 
 ```
-### 5. The default api prefix is /api/v1. There are two routes available:
+5. The default api prefix is /api/v1. There are two routes available:
 
 **/api/v1/quotes**
 
@@ -49,7 +49,7 @@ AUTHORIZATION_TOKEN="my-secret-token-123"
 
 All requests without a token will be denied.
 
-### 6. To start tests run:
+6. To start tests run:
 
 ```
 
@@ -57,11 +57,11 @@ All requests without a token will be denied.
 
 ```
 
-### 7. Configuration
+7. Configuration
 
   You can change the quotes driver and amount of quotes in config/quotes.php file
 
 
-### 8. Contact
+8. Contact
 
   In case of any question email me at [masitko@gmail.com](mailto:masitko@gmail.com)
