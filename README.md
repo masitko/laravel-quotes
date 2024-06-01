@@ -1,5 +1,7 @@
 ### Laravel Quotes API
 
+![Github Actions](https://github.com/masitko/laravel-quotes/actions/workflows/laravel.yml/badge.svg)
+
 This project comes with a local Docker environment utilisig [Laravel Sail](https://laravel.com/docs/11.x/sail#rebuilding-sail-images)
 
 ### How to use it
