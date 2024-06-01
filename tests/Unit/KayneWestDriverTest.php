@@ -5,9 +5,15 @@ namespace Tests\Unit;
 use App\Services\Quotes\KayneWestDriver;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class KayneWestDriverTest extends TestCase
 {
+  private KayneWestDriver | MockObject $driverMock;
+  public function setUp(): void {
+    $this->driverMock = $this->getMockBuilder(KayneWestDriver::class)->onlyMethods(['getRemoteQuotes'])->getMock();
+  }
+
   public function test_get_quotes_should_try_to_get_quotes_from_cache_first(): void
   {
     $testQuotes = ['some_mocked_quotes'];
@@ -31,9 +37,8 @@ class KayneWestDriverTest extends TestCase
       ->with('quotes:kayne-west')
       ->andReturn(null);
 
-    $mock = $this->getMockBuilder(KayneWestDriver::class)->onlyMethods(['getRemoteQuotes'])->getMock();
-    $mock->expects($this->once())->method('getRemoteQuotes')->willReturn($testQuotes);
-    $result = $mock->getQuotes();
+    $this->driverMock->expects($this->once())->method('getRemoteQuotes')->willReturn($testQuotes);
+    $result = $this->driverMock->getQuotes();
     $this->assertEquals($testQuotes, $result);
   }
 
@@ -47,9 +52,8 @@ class KayneWestDriverTest extends TestCase
       ->with('quotes:kayne-west')
       ->andReturn(true);
 
-    $mock = $this->getMockBuilder(KayneWestDriver::class)->onlyMethods(['getRemoteQuotes'])->getMock();
-    $mock->expects($this->once())->method('getRemoteQuotes')->willReturn($testQuotes);
-    $result = $mock->refreshQuotes();
+    $this->driverMock->expects($this->once())->method('getRemoteQuotes')->willReturn($testQuotes);
+    $result = $this->driverMock->refreshQuotes();
     $this->assertEquals($testQuotes, $result);
   }
 }
