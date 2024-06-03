@@ -15,11 +15,11 @@ use ReallySimpleJWT\Token;
 class CheckAuthenticationToken
 {
 
-  private UserProvider $provider;
+  private UserProvider $userProvider;
 
   public function __construct()
   {
-    $this->provider = Auth::createUserProvider('users');
+    $this->userProvider = Auth::createUserProvider('users');
   }
 
   /**
@@ -34,12 +34,15 @@ class CheckAuthenticationToken
     if ($tokenExists = $authHeader && str_contains($authHeader, 'Bearer ')) {
       $token = explode(' ', $authHeader)[1];
     }
-    if ($tokenExists && Token::validate($token, Config::get('jwt.secret'))) {
-      $payload = Token::getPayload($token);
-      if( isset($payload['user_id']))
-        Auth::setUser($this->provider->retrieveById($payload['user_id']));
-      $response =  $next($request);
-      return $response;
+    try {
+      if ($tokenExists && Token::validate($token, Config::get('jwt.secret'))) {
+        $payload = Token::getPayload($token);
+        if (isset($payload['user_id']))
+          Auth::setUser($this->userProvider->retrieveById($payload['user_id']));
+        $response =  $next($request);
+        return $response;
+      }
+    } catch (\Exception $e) {
     }
     return response()->json([
       'error' => 'Unauthorized',
