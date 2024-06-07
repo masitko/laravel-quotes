@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Interfaces\GetAvatarApiDriver;
+use Illuminate\Support\Facades\Config;
 
 class GiphyDriver implements GetAvatarApiDriver
 {
@@ -34,9 +35,8 @@ class GiphyDriver implements GetAvatarApiDriver
   
   protected function getRemoteAvatar(): string
   {
-    $key = 'ZG86FxVMno8oZ4DNqdTDmCTuHnI2mL4C';
     $response = Http::acceptJson()->get('api.giphy.com/v1/gifs/search', [
-      'api_key' => $key,
+      'api_key' => Config::get('avatar.giphy_api_key'),
       'q' => 'kayne west',
       'limit' => 10,
       'offset' => rand(0, 50)

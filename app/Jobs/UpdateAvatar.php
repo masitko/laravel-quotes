@@ -34,7 +34,6 @@ class UpdateAvatar implements ShouldQueue
     public function handle( GiphyDriver $avatarDriver ): void
     {
         Log::debug('Starting Refresh Avatar Job.');
-        throw new Exception('Failed Test', 999);
 
         $avatarDriver->refreshAvatar();
 
@@ -48,10 +47,5 @@ class UpdateAvatar implements ShouldQueue
     public function failed(Throwable $th)
     {
         Log::error('Failed Refresh Avatar Job.');
-        if ($th->getCode() == 999) {
-            $this->release();
-        } else {
-          Log::error('This is a proper error.');
-        }
     }    
 }
