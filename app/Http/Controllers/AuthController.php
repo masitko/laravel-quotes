@@ -28,13 +28,14 @@ class AuthController extends Controller
       "password" => Hash::make($validated["password"]),
     ]);
 
-    return response()->json(['user' => [
-      'id'=> $user->id,
-      'name'=> $user->name,
-      'email'=> $user->email,
-    ],
-      'saved'=> $user,
-  ]);
+    return response()->json([
+      'user' => [
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+      ],
+      'saved' => $user,
+    ]);
   }
 
   public function login(Request $request): JsonResponse
@@ -43,20 +44,11 @@ class AuthController extends Controller
       "email" => ["required", "email"],
       "password" => ["required", "string"],
     ]);
-    if( Auth::attempt($credentials) ) {
+    if (Auth::attempt($credentials)) {
       return response()->json([
-        'mesage'=> 'User logged in succesfully',
-        'user' => [
-          'id'=> Auth::user()->id,
-          'name'=> Auth::user()->name,
-          'email'=> Auth::user()->email,
-        ],
-        'token' => [
-          'access_token' => $this->getToken( Auth::user()->id ),
-          'token_type' => 'bearer',
-        ],
+        'mesage' => 'User logged in succesfully',
+        'token' => $this->getToken(Auth::user()),
       ], 200);
-
     };
     return response()->json(['error' => 'Wrong credentials, sorry'], 401);
   }
@@ -66,9 +58,18 @@ class AuthController extends Controller
     // logout logic
   }
 
-  protected function getToken( $userId )
+  protected function getToken(User|null $user)
   {
-    return Token::create( $userId, Config::get('jwt.secret'), time() + Config::get('jwt.expiration'), 'localhost' );
+    $payload = [
+      'iat' => time(),
+      'exp' => time() + Config::get('jwt.expiration'),
+      'iss' => 'localhost',
+      'user' => [
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+      ],
+    ];
+    return Token::customPayload($payload, Config::get('jwt.secret'));
   }
-
 }
