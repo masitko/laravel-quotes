@@ -19,20 +19,20 @@ class GiphyDriver implements GetAvatarApiDriver
     return $avatar;
   }
 
-    /** 
-    * Refresh the avatar from the remote API.
-    * 
-    * @param none
-    * @return array
-    */
-    public function refreshAvatar(): string
-    {
-      Log::debug('Refreshing avatar from Giphy');
-      Cache::forget('avatar:giphy');
-      return $this->getRemoteAvatar();
-    }
-  
-  
+  /** 
+   * Refresh the avatar from the remote API.
+   * 
+   * @param none
+   * @return array
+   */
+  public function refreshAvatar(): string
+  {
+    Log::debug('Refreshing avatar from Giphy');
+    Cache::forget('avatar:giphy');
+    return $this->getRemoteAvatar();
+  }
+
+
   protected function getRemoteAvatar(): string
   {
     $response = Http::acceptJson()->get('api.giphy.com/v1/gifs/search', [
