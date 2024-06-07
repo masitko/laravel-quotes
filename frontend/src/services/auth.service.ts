@@ -1,19 +1,19 @@
 
 import { useAuthStore } from '@/stores/auth.store';
 
-const API_AUTH_URL = 'http://localhost:16080/api/auth/';
+const AUTH_BASE_URL = import.meta.env.VITE_AUTH_BASE_URL;
 
 
 export function useAuthService() {
 
-  function isLoggedIn() {
+  function isLoggedIn(): boolean {
     return useAuthStore().isLoggedIn;
   }
 
-  function getUser() {
+  function getUser(): IUser | null {
     return useAuthStore().getUser;
   }
-  function getHeaders(): Headers{
+  function getHeaders(): Headers {
     const headers = new Headers();
     headers.set('Content-Type', 'application/json');
     return headers;
@@ -21,55 +21,56 @@ export function useAuthService() {
 
   function getAuthHeader(): Headers {
     const user = JSON.parse(localStorage.getItem('user') || '""');
-    const headers = new Headers();
+    const headers = getHeaders();
     if (user && user.accessToken) {
-      headers.set('Authorization', 'Bearer ' + user.accessToken.access_token);
+      headers.set('Authorization', 'Bearer ' + user.accessToken);
     }
     return headers;
   }
 
-  function login(credentials: ICredentials) {
-
-    return fetch(API_AUTH_URL + 'login', {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({
-        email: credentials.email,
-        password: credentials.password
-      })
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        if (data.token && data.user) {
-          data.user.accessToken = data.token;
-          localStorage.setItem('user', JSON.stringify(data.user));
-        }
-        useAuthStore().loginSuccess(data.user);
-        return data;
-      }).catch((error) => {
-        useAuthStore().loginFailure();
-        console.log(error);
+  async function login(credentials: ICredentials) {
+    try {
+      const response = await fetch(AUTH_BASE_URL + 'login', {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password
+        })
       });
+      const data = await response.json();
+      const accessToken = data?.token;
+      if (!accessToken)
+        throw new Error('Missing access token');
+      // get the middle part of the token and Base64 decode it
+      const payload = JSON.parse(atob(accessToken.split('.')[1]));
+      payload.user.accessToken = data.token;
+      localStorage.setItem('user', JSON.stringify(payload.user));
+      useAuthStore().loginSuccess(payload.user);
+      return data;
+    } catch (error) {
+      useAuthStore().loginFailure();
+      console.error(error);
+    }
   }
 
-  function logout() {
+  function logout(): void {
     useAuthStore().logout();
     localStorage.removeItem('user');
   }
 
-  function register(user: IUser) {
-    console.log(user);
-    return fetch(API_AUTH_URL + `register`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(user)
-    }).then((response) => {
+  async function register(user: IUser) {
+    try {
+      const response = await fetch(AUTH_BASE_URL + `register`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(user)
+      });
       console.log(response);
-      return response.json();
-    }).catch((error) => {
-      console.log(error);
-    })
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return {

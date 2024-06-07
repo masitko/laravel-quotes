@@ -1,43 +1,41 @@
 
 import { useAuthService } from './auth.service';
 
-const API_AUTH_URL = 'http://localhost:16080/api/v1/';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export type QuotesResponse = {
+  quotes: string[];
+}
+
+// QuotesResponse type guard
+const isQuotesResponse = (data: any): data is QuotesResponse => {
+  return typeof data === 'object' &&
+    data.quotes instanceof Array &&
+    data.quotes.every((quote: any) => typeof quote === 'string');
+}
 
 export function useQuotesService() {
 
-  function getHeaders(): Headers {
-    const headers = useAuthService().getAuthHeader();
-    headers.set('Content-Type', 'application/json');
-    return headers;
-  }
-
-  function getQuotes() {
-    return fetch(API_AUTH_URL + 'quotes', {
+  async function getQuotes(): Promise<QuotesResponse> {
+    const response = await fetch(API_BASE_URL + 'quotes', {
       method: 'GET',
-      headers: getHeaders()
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        return data;
-      }).catch((error) => {
-        console.log(error);
-      });
+      headers: useAuthService().getAuthHeader()
+    });
+    const data = await response.json();
+    if( !isQuotesResponse(data) )
+      throw new Error('Invalid quotes response');
+    return data;
   }
 
-  function refreshQuotes() {
-    return fetch(API_AUTH_URL + 'quotes/refresh', {
+  async function refreshQuotes() : Promise<QuotesResponse>{
+    const response = await fetch(API_BASE_URL + 'quotes/refresh', {
       method: 'PUT',
-      headers: getHeaders()
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        return data;
-      }).catch((error) => {
-        console.log(error);
-      });
+      headers: useAuthService().getAuthHeader()
+    });
+    const data = await response.json();
+    if( !isQuotesResponse(data) )
+      throw new Error('Invalid quotes response');
+    return data;
   }
 
   return {

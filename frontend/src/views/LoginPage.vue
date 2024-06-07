@@ -30,7 +30,6 @@ if (authService.isLoggedIn()) {
 }
 
 const onSubmit = handleSubmit(user => {
-  console.log('onSumbit', user)
   loading.value = true;
   const credencials: ICredentials = {
     email: user.email,
