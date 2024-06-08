@@ -31,12 +31,7 @@ class CheckJWTToken
    */
   public function handle(Request $request, Closure $next): Response|JsonResponse
   {
-    // $authHeader = $request->header('Authorization');
-    // if ($tokenExists = $authHeader && str_contains($authHeader, 'Bearer ')) {
-    //   $token = explode(' ', $authHeader)[1];
-    // }
     $token = $request->bearerToken();
-    // Log::debug('Token2: ' . $token2);
 
     try {
       if ($token && Token::validate($token, Config::get('jwt.secret'))) {
