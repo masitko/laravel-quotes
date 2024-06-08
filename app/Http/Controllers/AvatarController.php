@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Avatar\AvatarManager;
+use App\Interfaces\GetAvatarApiDriver;
 
 class AvatarController extends Controller
 {
   /**
    * Display the avatar.
    */
-  public function index(AvatarManager $avatarManager)
+  public function index(GetAvatarApiDriver $avatarDriver)
   {
-    return response()->json(['avatarUrl' => $avatarManager->getAvatarUrl()]);
+    return response()->json(['avatarUrl' => $avatarDriver->getAvatarUrl()]);
   }
 }
