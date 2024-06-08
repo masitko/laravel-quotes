@@ -2,7 +2,6 @@
 
 namespace App\Services\Quotes;
 
-use App\Interfaces\GetQuotesApiDriver;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Manager;
 

@@ -2,13 +2,12 @@
 
 namespace App\Services\Avatar;
 
-use App\Interfaces\GetAvatarApiDriver;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Manager;
 
 class AvatarManager extends Manager
 {
-  public function createGiphyDriver(): GetAvatarApiDriver
+  public function createGiphyDriver(): GiphyDriver
   {
     return new GiphyDriver();
   }
