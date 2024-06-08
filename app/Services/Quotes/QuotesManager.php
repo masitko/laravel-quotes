@@ -9,12 +9,12 @@ use Illuminate\Support\Manager;
 
 class QuotesManager extends Manager
 {
-  public function createBoringDriver(): GetQuotesApiDriver
+  public function createBoringDriver(): BoringDriver
   {
     return new BoringDriver();
   }
 
-  public function createKayneWestDriver(): GetQuotesApiDriver
+  public function createKayneWestDriver(): KayneWestDriver
   {
     return new KayneWestDriver();
   }
