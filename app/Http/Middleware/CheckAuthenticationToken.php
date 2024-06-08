@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 
 class CheckAuthenticationToken
 {
@@ -17,7 +18,7 @@ class CheckAuthenticationToken
      */
     public function handle(Request $request, Closure $next): Response|JsonResponse
     {
-        if( $request->header('Authorization') !== env('AUTHORIZATION_TOKEN') ) {
+        if( $request->header('Authorization') !== Config::get('auth.auth_static_token') ) {
           return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $next($request);
